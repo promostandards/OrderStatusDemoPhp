@@ -110,11 +110,11 @@ class DbCalls
         $bind = mysqli_stmt_bind_param($stmt, "sssssisii",
             $poNumber,
             $factoryOrderNumber,
-            $expectedShipDate,
-            $expectedDeliveryDate,
+            date("Y-m-d H:i:s", strtotime($expectedShipDate)),
+            date("Y-m-d H:i:s", strtotime($expectedDeliveryDate)),
             $additionalExplanation,
             $responseRequired,
-            $validTimeStamp,
+            date("Y-m-d H:i:s", strtotime($validTimeStamp)),
             $orderStatusTypeId,
             $orderStatusVendorId
         );
@@ -122,6 +122,7 @@ class DbCalls
         if ($exec) {
             echo "Inserted data in order_status_type detail PO {$poNumber} and factory order {$factoryOrderNumber} \n";
         } else {
+            echo $stmt->error. "---Failed to insert order status detail {$factoryOrderNumber} \n";
             return false;
         }
     }
@@ -138,11 +139,11 @@ class DbCalls
                 `order_status_types_id` = ? where order_status_detail_id = ?";
         $stmt = mysqli_prepare($conn, $sql);
         $bind = mysqli_stmt_bind_param($stmt, "sssisii",
-            $expectedShipDate,
-            $expectedDeliveryDate,
+            date("Y-m-d H:i:s", strtotime($expectedShipDate)),
+            date("Y-m-d H:i:s", strtotime($expectedDeliveryDate)),
             $additionalExplanation,
             $responseRequired,
-            $validTimeStamp,
+            date("Y-m-d H:i:s", strtotime($validTimeStamp)),
             $orderStatusTypeId,
             $detailId
         );
@@ -150,6 +151,7 @@ class DbCalls
         if ($exec) {
             echo "Updated data in order_status_type detail PO {$poNumber} and factory order {$factoryOrderNumber} \n";
         } else {
+            echo $stmt->error. "---Failed to update order status detail {$factoryOrderNumber} \n";
             return false;
         }
     }
@@ -206,6 +208,7 @@ class DbCalls
             return true;
         } else {
             return false;
+            echo  $stmt->error;
         }
     }
 

@@ -6,6 +6,6 @@
  * Time: 1:54 PM
  */
 
-$param = array('querytype' => 4,'timestamp' => '', 'vendor_id' => 61125);
+$params = array('querytype' => 4,'timestamp' => '', 'vendor_id' => 61125);
 $xmlOutput = false;
-$xmlOutputDir = "/mnt/www/PromostandardOrderStatus/src/demo/output/";
+$xmlOutputDir = "/mnt/www/demo/";

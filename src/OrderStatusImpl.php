@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: rmukherjee
@@ -16,6 +17,7 @@ include('utils/OrderStatusWebServiceClient.php');
 /**
  * Main function below
  */
+error_reporting(0);
 $mysqlConnector = new MysqlConnector($username, $password, $servername, $dbname);
 $dbCalls = new DbCalls();
 $connection = $mysqlConnector->getMysqlConnection();
@@ -32,6 +34,9 @@ foreach ($clients as $client) {
         $queryType = $params['querytype'];
         $timeStamp = $params['timestamp'];
     }
+    else{
+        echo "No vendor id found";
+    }
     $statuses = $xmlOutput ? $soapClient->getOrderStatus($client->wsdl, $client->id, $client->credentials, $queryType, $timeStamp, true, $xmlOutputDir) : $soapClient->getOrderStatus($client->wsdl, $client->id, $client->credentials, $queryType, $timeStamp);
     if (count($statuses) > 0 && !$xmlOutput) {
         foreach ($statuses->OrderStatusArray->OrderStatus as $status) {
@@ -42,7 +47,7 @@ foreach ($clients as $client) {
                 $dbCalls->insertOrderStatusDetail($connection, $status->purchaseOrderNumber, $detailStatus->factoryOrderNumber, $detailStatus->expectedShipDate, $detailStatus->expectedDeliveryDate, $detailStatus->additionalExplanation, $responseRequired, $detailStatus->validTimestamp, $statusTypeId, $client->vendor_id);
                 $idInserted = $connection->insert_id;
                 if ($responseRequired == 1) {
-                    $dbCalls->insertOrderStatusRespondTo($connection, $detailStatus->ResponseToArray->RespondTo->name, $detailStatus->ResponseToArray->RespondTo->emailAddress, $detailStatus->ResponseToArray->RespondTo->phone, $idInserted);
+                    $dbCalls->insertOrderStatusRespondTo($connection, $detailStatus->ResponseToArray->RespondTo->name, $detailStatus->ResponseToArray->RespondTo->emailAddress, "", $idInserted);
                 }
             } else {
                 $dbCalls->updateOrderStatusDetail($connection, $status->purchaseOrderNumber, $detailStatus->factoryOrderNumber, $detailStatus->expectedShipDate, $detailStatus->expectedDeliveryDate, $detailStatus->additionalExplanation, $responseRequired, $detailStatus->validTimestamp, $statusTypeId, $client->vendor_id);

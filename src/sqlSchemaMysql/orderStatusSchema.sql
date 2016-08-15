@@ -32,7 +32,7 @@ CREATE TABLE `order_status`.`order_status_detail` (
   `order_status_types_id` INT NOT NULL,
   `order_status_vendor_id` INT NULL,
   PRIMARY KEY (`order_status_detail_id`),
-  INDEX `fk_order_status_detail_order_status_types1_idx` (`order_status_types_id` ASC),d
+  INDEX `fk_order_status_detail_order_status_types1_idx` (`order_status_types_id` ASC),
   INDEX `fk_order_status_detail_order_status_vendor1_idx` (`order_status_vendor_id` ASC),
   CONSTRAINT `fk_order_status_detail_order_status_types1`
   FOREIGN KEY (`order_status_types_id`)
